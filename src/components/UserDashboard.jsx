@@ -266,11 +266,11 @@ export default function Products() {
 
         {/* ===== Search + Filter Bar ===== */}
         <div style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#EAF6FB',
           borderRadius: '14px',
           padding: '16px 18px',
           marginBottom: '24px',
-          border: '1px solid #E2E8F0',
+          border: '1px solid #CDE9F2',
           boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
           display: 'flex',
           gap: '14px',
@@ -283,7 +283,7 @@ export default function Products() {
             minWidth: isMobile ? '100%' : '260px',
             display: 'flex',
             alignItems: 'center',
-            border: '1.5px solid #CBD5E1',
+            border: '1.5px solid #B7DCE9',
             borderRadius: '10px',
             padding: '0 14px',
             backgroundColor: '#FFFFFF',
@@ -294,7 +294,7 @@ export default function Products() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 153, 204, 0.1)';
           }}
           onBlurCapture={(e) => {
-            e.currentTarget.style.borderColor = '#CBD5E1';
+            e.currentTarget.style.borderColor = '#B7DCE9';
             e.currentTarget.style.boxShadow = 'none';
           }}
           >
@@ -341,7 +341,7 @@ export default function Products() {
             minWidth: isMobile ? '100%' : '220px',
             display: 'flex',
             alignItems: 'center',
-            border: '1.5px solid #CBD5E1',
+            border: '1.5px solid #B7DCE9',
             borderRadius: '10px',
             padding: '0 14px',
             backgroundColor: '#FFFFFF',
@@ -352,7 +352,7 @@ export default function Products() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 153, 204, 0.1)';
           }}
           onBlurCapture={(e) => {
-            e.currentTarget.style.borderColor = '#CBD5E1';
+            e.currentTarget.style.borderColor = '#B7DCE9';
             e.currentTarget.style.boxShadow = 'none';
           }}
           >
@@ -485,21 +485,21 @@ export default function Products() {
                     backgroundColor: '#FFFFFF',
                     borderRadius: '14px',
                     overflow: 'hidden',
-                    border: '1px solid #E2E8F0',
-                    boxShadow: '0 4px 15px rgba(15, 23, 42, 0.05)',
+                    border: '2px solid #D6E4F0',
+                    boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
                     transition: 'all 0.3s ease',
                     display: 'flex',
                     flexDirection: 'column'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-6px)';
-                    e.currentTarget.style.boxShadow = '0 15px 35px rgba(15, 23, 42, 0.12)';
+                    e.currentTarget.style.boxShadow = '0 15px 35px rgba(15, 23, 42, 0.14)';
                     e.currentTarget.style.borderColor = '#0099CC';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(15, 23, 42, 0.05)';
-                    e.currentTarget.style.borderColor = '#E2E8F0';
+                    e.currentTarget.style.boxShadow = '0 6px 18px rgba(15, 23, 42, 0.08)';
+                    e.currentTarget.style.borderColor = '#D6E4F0';
                   }}
                 >
                   {/* Image Carousel */}
@@ -519,7 +519,8 @@ export default function Products() {
                         style={{
                           width: '100%',
                           height: '100%',
-                          objectFit: 'cover',
+                          objectFit: 'contain',
+                          backgroundColor: '#F1F5F9',
                           transition: 'transform 0.5s ease'
                         }}
                       />
@@ -874,26 +875,26 @@ export default function Products() {
             width: '58px',
             height: '58px',
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
+            background: 'linear-gradient(135deg, #FF9F43 0%, #E8590C 100%)',
             color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '24px',
             textDecoration: 'none',
-            boxShadow: '0 6px 20px rgba(0, 212, 255, 0.45)',
+            boxShadow: '0 6px 20px rgba(232, 89, 12, 0.45)',
             transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-            animation: 'floatPulseCyan 2.4s ease-in-out infinite 0.4s'
+            animation: 'floatPulseOrange 2.4s ease-in-out infinite 0.4s'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
-            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 212, 255, 0.7)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(232, 89, 12, 0.7)';
             e.currentTarget.style.animation = 'none';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 212, 255, 0.45)';
-            e.currentTarget.style.animation = 'floatPulseCyan 2.4s ease-in-out infinite 0.4s';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(232, 89, 12, 0.45)';
+            e.currentTarget.style.animation = 'floatPulseOrange 2.4s ease-in-out infinite 0.4s';
           }}
         >
           <FaPhoneAlt />
@@ -1629,16 +1630,16 @@ export default function Products() {
           }
         }
 
-        @keyframes floatPulseCyan {
+        @keyframes floatPulseOrange {
           0%, 100% {
             box-shadow:
-              0 6px 20px rgba(0, 212, 255, 0.45),
-              0 0 0 0 rgba(0, 212, 255, 0.55);
+              0 6px 20px rgba(232, 89, 12, 0.45),
+              0 0 0 0 rgba(232, 89, 12, 0.55);
           }
           50% {
             box-shadow:
-              0 6px 20px rgba(0, 212, 255, 0.55),
-              0 0 0 10px rgba(0, 212, 255, 0);
+              0 6px 20px rgba(232, 89, 12, 0.55),
+              0 0 0 10px rgba(232, 89, 12, 0);
           }
         }
 
@@ -1667,7 +1668,7 @@ export default function Products() {
         }
 
         .call-ring {
-          background: rgba(0, 212, 255, 0.35);
+          background: rgba(232, 89, 12, 0.35);
           animation-delay: 0.4s;
         }
 

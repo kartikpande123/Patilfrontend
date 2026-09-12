@@ -50,7 +50,7 @@ export default function Contact() {
       icon: <FaInstagram />,
       label: 'Instagram',
       value: '@patilbrothers',
-      link: 'https://www.instagram.com/p/DaeCnN0gbHC/?stkn=MWhmbmd2bzE2b3hsMg==',
+      link: 'https://www.instagram.com/patil_brothers_855?utm_source=qr&igsi=MXBvYXR6MDM1ZXZ6eQ==',
       color: '#E1306C',
       bg: 'rgba(225, 48, 108, 0.08)'
     },

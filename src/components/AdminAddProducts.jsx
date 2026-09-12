@@ -16,6 +16,10 @@ import {
 } from 'react-icons/fa';
 import API_BASE_URL from './ApiConfig';
 
+// Description limits (whichever hits first blocks input)
+const MAX_DESCRIPTION_WORDS = 50;
+const MAX_DESCRIPTION_CHARS = 200;
+
 export default function AdminAddProducts() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
@@ -23,6 +27,7 @@ export default function AdminAddProducts() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [descriptionWarning, setDescriptionWarning] = useState('');
 
   // Ref to the top of the form (used to scroll to top after successful submit)
   const formTopRef = useRef(null);
@@ -83,9 +88,37 @@ export default function AdminAddProducts() {
     }
   };
 
+  // Count words in a string (split by whitespace, ignore empty tokens)
+  const countWords = (text) => {
+    if (!text || !text.trim()) return 0;
+    return text.trim().split(/\s+/).filter(Boolean).length;
+  };
+
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Special handling for description — enforce char & word limits
+    if (name === 'description') {
+      // Check character limit first (simplest & strictest)
+      if (value.length > MAX_DESCRIPTION_CHARS) {
+        setDescriptionWarning(
+          `Description is limited to ${MAX_DESCRIPTION_CHARS} characters.`
+        );
+        return; // reject the change
+      }
+      // Then check word limit
+      const words = countWords(value);
+      if (words > MAX_DESCRIPTION_WORDS) {
+        setDescriptionWarning(
+          `Description is limited to ${MAX_DESCRIPTION_WORDS} words.`
+        );
+        return; // reject the change
+      }
+      // All good — clear any warning
+      setDescriptionWarning('');
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
     if (error) setError('');
   };
@@ -151,6 +184,17 @@ export default function AdminAddProducts() {
     }
     if (!formData.price || parseFloat(formData.price) <= 0) {
       setError('Please enter a valid price');
+      return;
+    }
+
+    // Final safety checks for description
+    if (formData.description.length > MAX_DESCRIPTION_CHARS) {
+      setError(`Description must be ${MAX_DESCRIPTION_CHARS} characters or fewer`);
+      return;
+    }
+    const descWords = countWords(formData.description);
+    if (descWords > MAX_DESCRIPTION_WORDS) {
+      setError(`Description must be ${MAX_DESCRIPTION_WORDS} words or fewer`);
       return;
     }
 
@@ -229,12 +273,33 @@ export default function AdminAddProducts() {
       productImage3: null,
     });
     setFinalPrice('');
+    setDescriptionWarning('');
   };
 
   const getCategoryName = (id) => {
     const c = categories.find(cat => cat.id === id);
     return c ? c.name : '';
   };
+
+  // ===== Word / Char counter styling helpers =====
+  const currentChars = formData.description.length;
+  const currentWords = countWords(formData.description);
+  const charsNearLimit = currentChars >= MAX_DESCRIPTION_CHARS - 30;
+  const wordsNearLimit = currentWords >= MAX_DESCRIPTION_WORDS - 5;
+  const charsOver = currentChars > MAX_DESCRIPTION_CHARS;
+  const wordsOver = currentWords > MAX_DESCRIPTION_WORDS;
+
+  const charCounterColor = charsOver
+    ? '#EF4444'
+    : charsNearLimit
+      ? '#F59E0B'
+      : '#64748B';
+
+  const wordCounterColor = wordsOver
+    ? '#EF4444'
+    : wordsNearLimit
+      ? '#F59E0B'
+      : '#64748B';
 
   // Image upload box component
   const ImageUploadBox = ({ slot, label, required }) => (
@@ -440,6 +505,7 @@ export default function AdminAddProducts() {
           <p style={{ margin: 0, fontSize: '13px', color: '#0F172A', lineHeight: '1.5' }}>
             Fill in the product details below. Fields marked with <span style={{ color: '#EF4444', fontWeight: '700' }}>*</span> are required.
             The first image is mandatory; the other two are optional.
+            Description is limited to <strong>{MAX_DESCRIPTION_CHARS} characters</strong> / <strong>{MAX_DESCRIPTION_WORDS} words</strong>.
           </p>
         </div>
 
@@ -620,7 +686,7 @@ export default function AdminAddProducts() {
                     padding: '2px 8px',
                     borderRadius: '10px'
                   }}>
-                    Optional
+                    Optional • Max {MAX_DESCRIPTION_CHARS} chars / {MAX_DESCRIPTION_WORDS} words
                   </span>
                 </h3>
               </div>
@@ -630,12 +696,14 @@ export default function AdminAddProducts() {
                 value={formData.description}
                 onChange={handleInputChange}
                 disabled={isLoading}
-                placeholder="Provide a detailed product description (optional)..."
+                placeholder={`Provide a short product description (max ${MAX_DESCRIPTION_CHARS} characters)...`}
                 rows={4}
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  border: '1.5px solid #CBD5E1',
+                  border: descriptionWarning
+                    ? '1.5px solid #EF4444'
+                    : '1.5px solid #CBD5E1',
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontWeight: '500',
@@ -649,14 +717,71 @@ export default function AdminAddProducts() {
                   boxSizing: 'border-box'
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#0099CC';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 153, 204, 0.1)';
+                  if (!descriptionWarning) {
+                    e.currentTarget.style.borderColor = '#0099CC';
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 153, 204, 0.1)';
+                  }
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#CBD5E1';
+                  if (!descriptionWarning) {
+                    e.currentTarget.style.borderColor = '#CBD5E1';
+                  }
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               />
+
+              {/* Counter + warning row */}
+              <div style={{
+                marginTop: '8px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '10px',
+                flexWrap: 'wrap'
+              }}>
+                {/* Counters */}
+                <div style={{
+                  display: 'flex',
+                  gap: '14px',
+                  alignItems: 'center',
+                  flexWrap: 'wrap'
+                }}>
+                  {/* Characters counter */}
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: charCounterColor
+                  }}>
+                    {currentChars} / {MAX_DESCRIPTION_CHARS} characters
+                  </span>
+
+                  <span style={{ color: '#CBD5E1', fontSize: '12px' }}>•</span>
+
+                  {/* Words counter */}
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: wordCounterColor
+                  }}>
+                    {currentWords} / {MAX_DESCRIPTION_WORDS} words
+                  </span>
+                </div>
+
+                {/* Warning message (shows only when user typed too much) */}
+                {descriptionWarning && (
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#EF4444',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}>
+                    <FaExclamationCircle style={{ fontSize: '11px' }} />
+                    {descriptionWarning}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Section: Images */}

@@ -7,11 +7,15 @@ import {
   FaFacebookF,
   FaYoutube,
   FaMapMarkerAlt,
-  FaEnvelope,
   FaArrowRight,
-  FaChevronRight
+  FaChevronRight,
+  FaDirections
 } from 'react-icons/fa';
 import logo from "../assets/logo.jpeg";
+
+// Shared map URL used for both "Visit Our Store" and "Get Directions"
+const MAPS_URL =
+  'https://www.google.com/maps/search/?api=1&query=Varchagal+Naduvin+Road+Karnataka+587122';
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -50,7 +54,7 @@ export default function Footer() {
     {
       icon: <FaInstagram />,
       label: 'Instagram',
-      url: 'https://www.instagram.com/p/DaeCnN0gbHC/?stkn=MWhmbmd2bzE2b3hsMg==',
+      url: 'https://www.instagram.com/patil_brothers_855?utm_source=qr&igsi=MXBvYXR6MDM1ZXZ6eQ==',
       color: '#E1306C',
     },
     {
@@ -369,12 +373,27 @@ export default function Footer() {
               flexDirection: 'column',
               gap: '16px'
             }}>
-              {/* Address */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '12px'
-              }}>
+              {/* Address — clickable → opens Google Maps */}
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Open in Google Maps"
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '12px',
+                  textDecoration: 'none',
+                  transition: 'transform 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0)';
+                }}
+              >
                 <div style={{
                   width: '34px',
                   height: '34px',
@@ -410,7 +429,44 @@ export default function Footer() {
                     Varchagal, Karnataka 587122
                   </p>
                 </div>
-              </div>
+              </a>
+
+              {/* Get Directions button */}
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '10px 16px',
+                  background: 'rgba(0, 212, 255, 0.12)',
+                  border: '1.5px solid rgba(0, 212, 255, 0.4)',
+                  color: '#00D4FF',
+                  borderRadius: '9px',
+                  textDecoration: 'none',
+                  fontWeight: '700',
+                  fontSize: '13px',
+                  letterSpacing: '0.3px',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#00D4FF';
+                  e.currentTarget.style.color = '#0A1628';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 212, 255, 0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(0, 212, 255, 0.12)';
+                  e.currentTarget.style.color = '#00D4FF';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <FaDirections /> Get Directions
+              </a>
 
               {/* Phone */}
               <a
@@ -557,7 +613,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
+        {/* ===== Bottom bar (copyright + developer credit on same line) ===== */}
         <div style={{
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           paddingTop: '24px',
@@ -571,10 +627,39 @@ export default function Footer() {
             margin: 0,
             fontSize: '13px',
             color: '#94A3B8',
-            fontWeight: '500'
+            fontWeight: '500',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '6px'
           }}>
-            &copy; 2026/2027 <span style={{ color: '#FFFFFF', fontWeight: '700' }}>Patil Brothers</span>. All rights reserved.
+            <span>
+              &copy; {currentYear}{' '}
+              <span style={{ color: '#FFFFFF', fontWeight: '700' }}>
+                Patil Brothers
+              </span>. All rights reserved.
+            </span>
+            <span style={{ color: '#475569', fontWeight: '400' }}>|</span>
+            <span style={{ color: '#64748B', fontWeight: '500' }}>
+              Developed by{' '}
+              <a
+                href="https://aksoftwareco.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#00D4FF',
+                  fontWeight: '700',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s ease'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '#00D4FF'; }}
+              >
+                AK Software Developers
+              </a>
+            </span>
           </p>
+
           <p style={{
             margin: 0,
             fontSize: '13px',
