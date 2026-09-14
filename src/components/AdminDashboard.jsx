@@ -109,7 +109,6 @@ export default function AdminDashboard() {
       color: '#FF6B35',
       bgColor: 'rgba(37, 211, 102, 0.1)',
       description: 'Add promo Images',
-      badge: pendingCount > 0 ? pendingCount : null
     },
   ];
 
