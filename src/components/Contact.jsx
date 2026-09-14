@@ -18,8 +18,6 @@ export default function Contact() {
   const navigate = useNavigate();
 
   // ===== SCROLL TO TOP ON MOUNT =====
-  // Ensures the page always opens from the top even if the previous
-  // route/page was scrolled down.
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -33,16 +31,16 @@ export default function Contact() {
     {
       icon: <FaPhoneAlt />,
       label: 'Call Us',
-      value: '083102 05800',
-      link: 'tel:08310205800',
+      value: '9353368514',
+      link: 'tel:9353368514',
       color: '#0099CC',
       bg: 'rgba(0, 153, 204, 0.08)'
     },
     {
       icon: <FaWhatsapp />,
       label: 'WhatsApp',
-      value: '083102 05800',
-      link: 'https://wa.me/918310205800',
+      value: '9353368514',
+      link: 'https://wa.me/919353368514',
       color: '#25D366',
       bg: 'rgba(37, 211, 102, 0.08)'
     },
@@ -107,7 +105,6 @@ export default function Contact() {
           background: 'rgba(255, 107, 53, 0.06)'
         }} />
 
-        {/* ===== Back Button — top-left ===== */}
         <button
           onClick={() => navigate('/')}
           style={{
@@ -270,7 +267,7 @@ export default function Contact() {
             </a>
           ))}
 
-          {/* ===== YouTube Card (5th contact card) ===== */}
+          {/* ===== YouTube Card ===== */}
           {(() => {
             const card = contactCards[4];
             return (
@@ -344,7 +341,7 @@ export default function Contact() {
             );
           })()}
 
-          {/* ===== Visit Our Store Card — placed beside YouTube ===== */}
+          {/* ===== Visit Our Store Card ===== */}
           <div
             className="visit-store-card"
             style={{
@@ -455,7 +452,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Why Choose Us Card (now full-width below) */}
+      {/* Why Choose Us Card */}
       <div style={{
         maxWidth: '1200px',
         margin: '40px auto 0',
@@ -587,7 +584,7 @@ export default function Contact() {
             </p>
           </div>
           <a
-            href="tel:08310205800"
+            href="tel:9353368514"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -613,7 +610,7 @@ export default function Contact() {
             }}
           >
             <FaPhoneAlt style={{ fontSize: '22px' }} />
-            083102 05800
+            9353368514
           </a>
         </div>
       </div>

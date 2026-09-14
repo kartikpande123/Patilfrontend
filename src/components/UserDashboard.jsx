@@ -17,7 +17,7 @@ import Header from './Header';
 import API_BASE_URL from './ApiConfig';
 import Footer from './Footer';
 
-export default function Products() {
+export default function UserDashboard() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -263,6 +263,53 @@ export default function Products() {
 
       {/* Main Content */}
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px' }}>
+
+     {/* ===== Section Heading ===== */}
+<div style={{
+  display: 'flex',
+  justifyContent: 'center',
+  marginBottom: '28px'
+}}>
+  <div style={{
+    display: 'inline-flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    background: 'linear-gradient(135deg, #EAF6FB 0%, #DDF1FA 100%)',
+    border: '2px solid #0099CC',
+    borderRadius: '16px',
+    padding: '14px 42px',
+    boxShadow: '0 8px 24px rgba(0, 153, 204, 0.18)',
+    position: 'relative'
+  }}>
+    <span style={{
+      fontSize: '11px',
+      fontWeight: '800',
+      color: '#0099CC',
+      letterSpacing: '2px',
+      textTransform: 'uppercase',
+      marginBottom: '4px'
+    }}>
+      Explore Our Range
+    </span>
+    <h2 style={{
+      fontSize: '28px',
+      fontWeight: '800',
+      color: '#0A1628',
+      margin: 0,
+      letterSpacing: '-0.3px',
+      textAlign: 'center'
+    }} id="our-products">
+      Our Products
+    </h2>
+    <div style={{
+      width: '60px',
+      height: '4px',
+      borderRadius: '4px',
+      background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
+      marginTop: '10px'
+    }} />
+  </div>
+</div>
 
         {/* ===== Search + Filter Bar ===== */}
         <div style={{
@@ -826,7 +873,7 @@ export default function Products() {
       }}>
         {/* WhatsApp button */}
         <a
-          href="https://wa.me/918310205800"
+          href="https://wa.me/919353368514"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"
@@ -868,7 +915,7 @@ export default function Products() {
         <a
           href="tel:08310205800"
           aria-label="Call us"
-          title="Call 083102 05800"
+          title="Call 919353368514"
           className="float-call-btn"
           style={{
             position: 'relative',

@@ -15,6 +15,7 @@ import AdminCategory from "./components/AdminCategory";
 import Contact from "./components/Contact";
 import About from "./components/About";
 import OrderStatus from "./components/OrderStatus";
+import AdminAdd from "./components/AdminAdd";
 
 // Protected Route Component for Admin
 const ProtectedAdminRoute = ({ children }) => {
@@ -80,6 +81,14 @@ function App() {
             element={
               <ProtectedAdminRoute>
                 <AdminCategory />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/add"
+            element={
+              <ProtectedAdminRoute>
+                <AdminAdd />
               </ProtectedAdminRoute>
             }
           />

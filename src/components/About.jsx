@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FaCheckCircle, 
-  FaShieldAlt, 
-  FaAward, 
+import {
+  FaCheckCircle,
+  FaShieldAlt,
+  FaAward,
   FaUsers,
   FaTools,
   FaEye,
@@ -12,9 +12,14 @@ import {
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaArrowRight,
-  FaArrowLeft
+  FaArrowLeft,
+  FaImages
 } from 'react-icons/fa';
 import Footer from './Footer';
+import add1 from "../assets/add1.jpeg"
+import add2 from "../assets/add2.jpeg"
+import add3 from "../assets/add3.jpeg"
+import add4 from "../assets/add4.jpeg"
 
 // The secret key sequence — typing this while on the About page
 // navigates to /adminlogin. Case-insensitive.
@@ -25,14 +30,8 @@ export default function About() {
   const keyBufferRef = useRef('');
 
   // ===== SCROLL TO TOP ON MOUNT =====
-  // Ensures the page always opens from the top even if the previous
-  // route/page was scrolled down.
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'auto' // 'auto' = instant; use 'smooth' for animated
-    });
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, []);
   // ==================================
 
@@ -116,6 +115,14 @@ export default function About() {
     }
   ];
 
+  // Promotional / product images
+  const promoImages = [
+    { src: add1, caption: 'Borewell Camera & Lock Combo' },
+    { src: add2, caption: 'Patil Brothers Service Vehicle' },
+    { src: add3, caption: 'Complete Borewell Kit' },
+    { src: add4, caption: 'Trusted Quality Products' }
+  ];
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -130,7 +137,6 @@ export default function About() {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Decorative circles */}
         <div style={{
           position: 'absolute',
           top: '-100px',
@@ -138,7 +144,8 @@ export default function About() {
           width: '300px',
           height: '300px',
           borderRadius: '50%',
-          background: 'rgba(0, 212, 255, 0.06)'
+          background: 'rgba(0, 212, 255, 0.06)',
+          animation: 'floatSlow 8s ease-in-out infinite'
         }} />
         <div style={{
           position: 'absolute',
@@ -147,10 +154,10 @@ export default function About() {
           width: '350px',
           height: '350px',
           borderRadius: '50%',
-          background: 'rgba(255, 107, 53, 0.05)'
+          background: 'rgba(255, 107, 53, 0.05)',
+          animation: 'floatSlow 10s ease-in-out infinite reverse'
         }} />
 
-        {/* ===== Back Button — top-left ===== */}
         <button
           onClick={() => navigate('/')}
           style={{
@@ -185,7 +192,7 @@ export default function About() {
           <FaArrowLeft /> Back
         </button>
 
-        <div style={{
+        <div className="fade-in-up" style={{
           maxWidth: '1200px',
           margin: '0 auto',
           position: 'relative',
@@ -203,7 +210,8 @@ export default function About() {
             letterSpacing: '1px',
             textTransform: 'uppercase',
             marginBottom: '20px',
-            border: '1px solid rgba(0, 212, 255, 0.3)'
+            border: '1px solid rgba(0, 212, 255, 0.3)',
+            animation: 'pulseGlow 2.5s ease-in-out infinite'
           }}>
             About Us
           </span>
@@ -226,10 +234,74 @@ export default function About() {
             margin: '0 auto',
             lineHeight: '1.7'
           }}>
-            Your trusted partner for high-quality Borewell Cameras and Borewell Locks. 
-            We combine years of expertise with cutting-edge technology to deliver 
+            Your trusted partner for high-quality Borewell Cameras and Borewell Locks.
+            We combine years of expertise with cutting-edge technology to deliver
             reliable solutions for every borewell challenge across India.
           </p>
+        </div>
+      </div>
+
+      {/* Featured Products / Promotions — MOVED TO TOP */}
+      <div className="fade-in-up" style={{
+        maxWidth: '1200px',
+        margin: '-40px auto 0',
+        padding: '0 24px',
+        position: 'relative',
+        zIndex: 10
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '22px'
+        }}>
+          {promoImages.map((img, idx) => (
+            <div
+              key={idx}
+              className="gallery-card"
+              style={{
+                position: 'relative',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 12px 35px rgba(15, 23, 42, 0.15)',
+                border: '1px solid #E2E8F0',
+                background: '#FFFFFF',
+                animationDelay: `${idx * 0.12}s`
+              }}
+            >
+              <div style={{
+                width: '100%',
+                aspectRatio: '4 / 3',
+                overflow: 'hidden'
+              }}>
+                <img
+                  src={img.src}
+                  alt={img.caption}
+                  className="gallery-img"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    transition: 'transform 0.5s ease'
+                  }}
+                />
+              </div>
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: '14px 16px',
+                background: 'linear-gradient(180deg, rgba(10,22,40,0) 0%, rgba(10,22,40,0.85) 100%)',
+                color: '#FFFFFF',
+                fontSize: '13px',
+                fontWeight: '700',
+                letterSpacing: '0.2px'
+              }}>
+                {img.caption}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -242,7 +314,7 @@ export default function About() {
         gridTemplateColumns: '1fr 1fr',
         gap: '40px',
         alignItems: 'center'
-      }} className="story-grid">
+      }} className="story-grid fade-in-up">
         <div>
           <span style={{
             display: 'inline-block',
@@ -272,8 +344,8 @@ export default function About() {
             lineHeight: '1.8',
             marginBottom: '16px'
           }}>
-            Patil Brothers was founded with a simple mission — to make borewell 
-            inspection and protection simple, reliable, and affordable for every 
+            Patil Brothers was founded with a simple mission — to make borewell
+            inspection and protection simple, reliable, and affordable for every
             farmer, homeowner, and business across India.
           </p>
           <p style={{
@@ -282,9 +354,9 @@ export default function About() {
             lineHeight: '1.8',
             marginBottom: '24px'
           }}>
-            From high-precision HD Borewell Cameras to strong, tamper-proof 
-            Borewell Locks, our products are designed and tested to perform 
-            in the toughest conditions. Our commitment to quality and customer 
+            From high-precision HD Borewell Cameras to strong, tamper-proof
+            Borewell Locks, our products are designed and tested to perform
+            in the toughest conditions. Our commitment to quality and customer
             satisfaction has made us a trusted name in the industry.
           </p>
 
@@ -319,8 +391,18 @@ export default function About() {
           padding: '40px 32px',
           boxShadow: '0 20px 50px rgba(10, 22, 40, 0.2)',
           position: 'relative',
-          overflow: 'hidden'
-        }}>
+          overflow: 'hidden',
+          transition: 'transform 0.4s ease, box-shadow 0.4s ease'
+        }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-6px)';
+            e.currentTarget.style.boxShadow = '0 28px 60px rgba(10, 22, 40, 0.28)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 20px 50px rgba(10, 22, 40, 0.2)';
+          }}
+        >
           <div style={{
             position: 'absolute',
             top: '-50px',
@@ -360,7 +442,7 @@ export default function About() {
               lineHeight: '1.7',
               margin: '0 0 24px 0'
             }}>
-              Our products power borewells in farms, factories, and homes across 
+              Our products power borewells in farms, factories, and homes across
               the country. When you choose Patil Brothers, you choose reliability.
             </p>
 
@@ -394,7 +476,7 @@ export default function About() {
               }}>
                 <FaPhoneAlt style={{ color: '#FF6B35', fontSize: '16px' }} />
                 <span style={{ color: '#FFFFFF', fontSize: '14px', fontWeight: '600' }}>
-                  083102 05800
+                  9353368514
                 </span>
               </div>
             </div>
@@ -403,7 +485,7 @@ export default function About() {
       </div>
 
       {/* Why Choose Us Section */}
-      <div style={{
+      <div className="fade-in-up" style={{
         maxWidth: '1200px',
         margin: '80px auto 0',
         padding: '0 24px'
@@ -437,7 +519,7 @@ export default function About() {
             margin: '0 auto',
             lineHeight: '1.6'
           }}>
-            We don't just sell products — we deliver solutions built on quality, 
+            We don't just sell products — we deliver solutions built on quality,
             trust, and commitment to our customers.
           </p>
         </div>
@@ -506,7 +588,7 @@ export default function About() {
       </div>
 
       {/* Services Section */}
-      <div style={{
+      <div className="fade-in-up" style={{
         maxWidth: '1200px',
         margin: '80px auto 0',
         padding: '0 24px'
@@ -566,10 +648,12 @@ export default function About() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = '#0099CC';
                 e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 153, 204, 0.1)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = '#E2E8F0';
                 e.currentTarget.style.boxShadow = '0 2px 10px rgba(15, 23, 42, 0.03)';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               <div style={{
@@ -610,7 +694,7 @@ export default function About() {
       </div>
 
       {/* CTA Section */}
-      <div style={{
+      <div className="fade-in-up" style={{
         maxWidth: '1200px',
         margin: '80px auto 60px',
         padding: '0 24px'
@@ -631,7 +715,8 @@ export default function About() {
             width: '250px',
             height: '250px',
             borderRadius: '50%',
-            background: 'rgba(0, 212, 255, 0.06)'
+            background: 'rgba(0, 212, 255, 0.06)',
+            animation: 'floatSlow 9s ease-in-out infinite'
           }} />
           <div style={{
             position: 'absolute',
@@ -640,7 +725,8 @@ export default function About() {
             width: '280px',
             height: '280px',
             borderRadius: '50%',
-            background: 'rgba(255, 107, 53, 0.05)'
+            background: 'rgba(255, 107, 53, 0.05)',
+            animation: 'floatSlow 11s ease-in-out infinite reverse'
           }} />
 
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -660,7 +746,7 @@ export default function About() {
               margin: '0 auto 30px',
               lineHeight: '1.6'
             }}>
-              Explore our range of Borewell Cameras and Locks, or get in touch 
+              Explore our range of Borewell Cameras and Locks, or get in touch
               with our team for personalized assistance.
             </p>
 
@@ -734,8 +820,36 @@ export default function About() {
       </div>
       <Footer />
 
-      {/* Responsive Styles */}
+      {/* Responsive & Animation Styles */}
       <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes floatSlow {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          50% { transform: translateY(-18px) translateX(10px); }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { box-shadow: 0 0 0 rgba(0, 212, 255, 0); }
+          50% { box-shadow: 0 0 16px rgba(0, 212, 255, 0.35); }
+        }
+        .fade-in-up {
+          animation: fadeInUp 0.7s ease both;
+        }
+        .gallery-card {
+          animation: fadeInUp 0.6s ease both;
+        }
+        .gallery-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 16px 35px rgba(15, 23, 42, 0.16);
+        }
+        .gallery-card {
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .gallery-card:hover .gallery-img {
+          transform: scale(1.08);
+        }
         @media (max-width: 900px) {
           .story-grid {
             grid-template-columns: 1fr !important;

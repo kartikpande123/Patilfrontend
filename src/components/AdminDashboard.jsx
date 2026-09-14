@@ -6,7 +6,8 @@ import {
   FaComments,
   FaSignOutAlt,
   FaUserShield,
-  FaList
+  FaList,
+  FaProjectDiagram
 } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import API_BASE_URL from './ApiConfig';
@@ -99,7 +100,17 @@ export default function AdminDashboard() {
       bgColor: 'rgba(37, 211, 102, 0.1)',
       description: 'View and respond to customer queries',
       badge: pendingCount > 0 ? pendingCount : null
-    }
+    },
+    {
+      id: 5,
+      title: 'Add Promo',
+      icon: <FaProjectDiagram />,
+      path: '/add',
+      color: '#FF6B35',
+      bgColor: 'rgba(37, 211, 102, 0.1)',
+      description: 'Add promo Images',
+      badge: pendingCount > 0 ? pendingCount : null
+    },
   ];
 
   return (

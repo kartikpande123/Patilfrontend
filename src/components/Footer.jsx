@@ -42,13 +42,13 @@ export default function Footer() {
     {
       icon: <FaWhatsapp />,
       label: 'WhatsApp',
-      url: 'https://wa.me/918310205800',
+      url: 'https://wa.me/919353368514',
       color: '#25D366',
     },
     {
       icon: <FaPhoneAlt />,
       label: 'Call',
-      url: 'tel:08310205800',
+      url: 'tel:9353368514',
       color: '#00D4FF',
     },
     {
@@ -470,7 +470,7 @@ export default function Footer() {
 
               {/* Phone */}
               <a
-                href="tel:08310205800"
+                href="tel:9353368514"
                 style={{
                   display: 'flex',
                   alignItems: 'flex-start',
@@ -516,14 +516,14 @@ export default function Footer() {
                     color: '#00D4FF',
                     fontWeight: '600'
                   }}>
-                    083102 05800
+                    9353368514
                   </p>
                 </div>
               </a>
 
               {/* WhatsApp */}
               <a
-                href="https://wa.me/918310205800"
+                href="https://wa.me/919353368514"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -571,7 +571,7 @@ export default function Footer() {
                     color: '#25D366',
                     fontWeight: '600'
                   }}>
-                    083102 05800
+                    9353368514
                   </p>
                 </div>
               </a>
@@ -613,7 +613,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ===== Bottom bar (copyright + developer credit on same line) ===== */}
+        {/* ===== Bottom bar ===== */}
         <div style={{
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           paddingTop: '24px',
