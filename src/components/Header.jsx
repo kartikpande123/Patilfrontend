@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  FaBars, 
-  FaTimes, 
-  FaChevronLeft, 
-  FaChevronRight, 
-  FaWhatsapp, 
+import {
+  FaBars,
+  FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
+  FaWhatsapp,
   FaPhoneAlt,
   FaSpinner
 } from 'react-icons/fa';
@@ -32,9 +32,22 @@ export default function Header() {
     { label: 'Order Status', path: '/orderstatus' },
   ];
 
+  // FIX 1: rAF-throttled scroll listener with hysteresis.
+  // Entering "scrolled" needs y > 60, leaving it needs y < 20, so the
+  // state can never flip-flop around a single threshold.
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setScrolled(prev => (prev ? y > 20 : y > 60));
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -85,22 +98,23 @@ export default function Header() {
     }
   };
 
-  const goToPrevAd = (e) => {
-    if (e) e.stopPropagation();
-    setCurrentAdIndex(prev => (prev - 1 + ads.length) % ads.length);
+  const restartAdTimer = (delay = 5000) => {
     if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current);
     autoScrollTimerRef.current = setInterval(() => {
       setCurrentAdIndex(p => (p + 1) % ads.length);
-    }, 8000);
+    }, delay);
+  };
+
+  const goToPrevAd = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentAdIndex(prev => (prev - 1 + ads.length) % ads.length);
+    restartAdTimer(8000);
   };
 
   const goToNextAd = (e) => {
     if (e) e.stopPropagation();
     setCurrentAdIndex(prev => (prev + 1) % ads.length);
-    if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current);
-    autoScrollTimerRef.current = setInterval(() => {
-      setCurrentAdIndex(p => (p + 1) % ads.length);
-    }, 5000);
+    restartAdTimer(5000);
   };
 
   const handleNavClick = (item) => {
@@ -137,20 +151,24 @@ export default function Header() {
             ? '0 4px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 212, 255, 0.06)'
             : '0 2px 10px rgba(0, 0, 0, 0.15)',
           borderBottom: '1px solid rgba(0, 212, 255, 0.12)',
-          transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+          // FIX 3: only non-layout properties transition here.
+          transition: 'background 0.35s ease, box-shadow 0.35s ease',
           overflow: 'hidden'
         }}>
+          {/* FIX 2: fixed height + fixed padding. The header no longer
+              changes size on scroll, so it can't push content and
+              re-trigger its own scroll handler. */}
           <div
             className="pb-header-inner"
             style={{
               maxWidth: '1400px',
               margin: '0 auto',
-              padding: scrolled ? '14px 40px' : '20px 40px',
+              padding: '0 40px',
+              height: '92px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '16px',
-              transition: 'padding 0.3s ease',
               boxSizing: 'border-box',
               width: '100%'
             }}
@@ -170,17 +188,19 @@ export default function Header() {
                 overflow: 'hidden'
               }}
             >
+              {/* Scales via transform, which never affects layout */}
               <div className="pb-logo-wrap" style={{
                 position: 'relative',
-                width: scrolled ? '56px' : '68px',
-                height: scrolled ? '56px' : '68px',
+                width: '68px',
+                height: '68px',
                 borderRadius: '50%',
                 padding: '3px',
                 background: 'linear-gradient(135deg, #00D4FF, #0099CC, #00D4FF)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.3s ease',
+                transform: scrolled ? 'scale(0.82)' : 'scale(1)',
+                transformOrigin: 'center',
                 overflow: 'hidden',
                 flexShrink: 0
               }}>
@@ -226,7 +246,7 @@ export default function Header() {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
                 }}>
-                  Borewell Camera & Borewell Lock
+                  Borewell Camera &amp; Borewell Lock
                 </span>
               </div>
             </div>
@@ -258,7 +278,7 @@ export default function Header() {
                       fontSize: '16px',
                       fontWeight: '600',
                       cursor: 'pointer',
-                      transition: 'all 0.25s ease',
+                      transition: 'background-color 0.25s ease, color 0.25s ease',
                       letterSpacing: '0.2px',
                       whiteSpace: 'nowrap',
                       boxShadow: isActive ? '0 0 0 1px rgba(0, 212, 255, 0.35), 0 4px 14px rgba(0, 212, 255, 0.15)' : 'none'
@@ -286,7 +306,7 @@ export default function Header() {
                 fontSize: '22px',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.25s ease',
+                transition: 'background-color 0.25s ease, border-color 0.25s ease',
                 flexShrink: 0
               }}
               onMouseEnter={(e) => {
@@ -332,7 +352,7 @@ export default function Header() {
                       fontWeight: '600',
                       cursor: 'pointer',
                       textAlign: 'left',
-                      transition: 'all 0.2s ease'
+                      transition: 'background-color 0.2s ease, color 0.2s ease'
                     }}
                   >
                     {item.label}
@@ -344,11 +364,12 @@ export default function Header() {
         </header>
       </div>
 
-      {/* Ad Banner */}
+      {/* FIX 4: the loading placeholder is the same height as the banner,
+          so the page doesn't jump when ads finish loading. */}
       {isFetchingAds && (
         <div style={{
           backgroundColor: '#0F1E33',
-          padding: '24px',
+          height: 'clamp(210px, 33vw, 480px)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -382,8 +403,10 @@ export default function Header() {
                 position: 'absolute',
                 inset: 0,
                 opacity: idx === currentAdIndex ? 1 : 0,
-                transform: idx === currentAdIndex ? 'scale(1)' : 'scale(1.06)',
-                transition: 'opacity 0.9s ease-in-out, transform 6s ease-out',
+                // FIX 5: transform removed from the slide wrapper — the Ken
+                // Burns keyframes on the child image own the transform now,
+                // so the two no longer fight each other.
+                transition: 'opacity 0.9s ease-in-out',
                 pointerEvents: idx === currentAdIndex ? 'auto' : 'none'
               }}
             >
@@ -431,7 +454,7 @@ export default function Header() {
                 backdropFilter: 'blur(6px)',
                 zIndex: 5,
                 opacity: showAdControls ? 1 : 0,
-                transition: 'all 0.3s ease',
+                transition: 'opacity 0.3s ease',
                 pointerEvents: showAdControls ? 'auto' : 'none'
               }}
             >
@@ -462,7 +485,7 @@ export default function Header() {
                 backdropFilter: 'blur(6px)',
                 zIndex: 5,
                 opacity: showAdControls ? 1 : 0,
-                transition: 'all 0.3s ease',
+                transition: 'opacity 0.3s ease',
                 pointerEvents: showAdControls ? 'auto' : 'none'
               }}
             >
@@ -480,7 +503,7 @@ export default function Header() {
             zIndex: 5,
             flexWrap: 'wrap'
           }}>
-             <a
+            <a
               href="tel:919353368514"
               className="pb-pulse-btn pb-ad-btn"
               style={{
@@ -494,7 +517,7 @@ export default function Header() {
                 textDecoration: 'none',
                 fontWeight: '800',
                 fontSize: '14.5px',
-                boxShadow: '0 6px 20px rgba(0, 102, 204, 0.55)',
+                boxShadow: '0 6px 20px rgba(232, 89, 12, 0.5)',
                 border: '1.5px solid rgba(255, 255, 255, 0.4)',
                 whiteSpace: 'nowrap'
               }}
@@ -526,8 +549,6 @@ export default function Header() {
               <FaWhatsapp style={{ fontSize: '18px' }} />
               WhatsApp
             </a>
-
-           
           </div>
 
           {ads.length > 1 && (
@@ -554,10 +575,7 @@ export default function Header() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setCurrentAdIndex(idx);
-                    if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current);
-                    autoScrollTimerRef.current = setInterval(() => {
-                      setCurrentAdIndex(p => (p + 1) % ads.length);
-                    }, 5000);
+                    restartAdTimer(5000);
                   }}
                   aria-label={`Go to ad ${idx + 1}`}
                   style={{
@@ -567,7 +585,7 @@ export default function Header() {
                     border: 'none',
                     backgroundColor: idx === currentAdIndex ? '#00D4FF' : 'rgba(255, 255, 255, 0.45)',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
+                    transition: 'width 0.3s ease, background-color 0.3s ease',
                     padding: 0
                   }}
                 />
@@ -598,10 +616,10 @@ export default function Header() {
 
       <style>{`
         .pb-logo-wrap {
-          transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+          will-change: transform;
         }
         .pb-logo-group:hover .pb-logo-wrap {
-          transform: rotate(-3deg) scale(1.04);
           box-shadow: 0 6px 18px rgba(0, 212, 255, 0.45);
         }
         .pb-nav-btn {
@@ -649,10 +667,11 @@ export default function Header() {
           .mobile-menu { display: none !important; }
         }
 
-        /* ===== MOBILE TWEAKS (bigger navbar height) ===== */
+        /* ===== MOBILE TWEAKS — height is set here, never padding ===== */
         @media (max-width: 600px) {
           .pb-header-inner {
-            padding: 18px 16px !important;
+            height: 76px !important;
+            padding: 0 16px !important;
             gap: 10px !important;
           }
           .pb-logo-wrap {
@@ -693,7 +712,8 @@ export default function Header() {
 
         @media (max-width: 420px) {
           .pb-header-inner {
-            padding: 16px 14px !important;
+            height: 70px !important;
+            padding: 0 14px !important;
           }
           .pb-logo-wrap {
             width: 54px !important;
@@ -730,6 +750,15 @@ export default function Header() {
         @keyframes pbKenBurns {
           from { transform: scale(1.08); }
           to { transform: scale(1); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .pb-logo-wrap,
+          .pb-ad-kenburns,
+          .pb-pulse-btn::before {
+            animation: none !important;
+            transition: none !important;
+          }
         }
       `}</style>
     </>
