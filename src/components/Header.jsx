@@ -18,7 +18,6 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Ad banner state
   const [ads, setAds] = useState([]);
   const [isFetchingAds, setIsFetchingAds] = useState(false);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
@@ -33,26 +32,20 @@ export default function Header() {
     { label: 'Order Status', path: '/orderstatus' },
   ];
 
-  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Fetch ads on mount
   useEffect(() => {
     fetchAds();
   }, []);
 
-  // Setup auto-scroll whenever ads change
   useEffect(() => {
     if (ads.length <= 1) {
       if (autoScrollTimerRef.current) {
@@ -61,11 +54,9 @@ export default function Header() {
       }
       return;
     }
-
     autoScrollTimerRef.current = setInterval(() => {
       setCurrentAdIndex(prev => (prev + 1) % ads.length);
     }, 5000);
-
     return () => {
       if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current);
     };
@@ -132,7 +123,6 @@ export default function Header() {
 
   return (
     <>
-      {/* ===== Sticky Navbar Wrapper (only nav + mobile menu stick) ===== */}
       <div style={{
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         position: 'sticky',
@@ -147,35 +137,43 @@ export default function Header() {
             ? '0 4px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 212, 255, 0.06)'
             : '0 2px 10px rgba(0, 0, 0, 0.15)',
           borderBottom: '1px solid rgba(0, 212, 255, 0.12)',
-          transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+          transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+          overflow: 'hidden'
         }}>
-          <div style={{
-            maxWidth: '1400px',
-            margin: '0 auto',
-            padding: scrolled ? '14px 40px' : '20px 40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '30px',
-            transition: 'padding 0.3s ease'
-          }}>
+          <div
+            className="pb-header-inner"
+            style={{
+              maxWidth: '1400px',
+              margin: '0 auto',
+              padding: scrolled ? '14px 40px' : '20px 40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '16px',
+              transition: 'padding 0.3s ease',
+              boxSizing: 'border-box',
+              width: '100%'
+            }}
+          >
 
-            {/* Logo & Brand */}
+            {/* Logo & Brand — allow shrinking, prevent overflow */}
             <div
               onClick={() => handleNavClick({ label: 'Home', path: '/' })}
               className="pb-logo-group"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '18px',
+                gap: '14px',
                 cursor: 'pointer',
-                flexShrink: 0
+                flexShrink: 1,
+                minWidth: 0,
+                overflow: 'hidden'
               }}
             >
               <div className="pb-logo-wrap" style={{
                 position: 'relative',
-                width: scrolled ? '60px' : '72px',
-                height: scrolled ? '60px' : '72px',
+                width: scrolled ? '56px' : '68px',
+                height: scrolled ? '56px' : '68px',
                 borderRadius: '50%',
                 padding: '3px',
                 background: 'linear-gradient(135deg, #00D4FF, #0099CC, #00D4FF)',
@@ -183,7 +181,8 @@ export default function Header() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.3s ease',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                flexShrink: 0
               }}>
                 <img
                   src={logo}
@@ -197,27 +196,35 @@ export default function Header() {
                   }}
                 />
               </div>
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                lineHeight: '1.25'
-              }}>
+              <div
+                className="pb-brand-text"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  lineHeight: '1.2',
+                  minWidth: 0,
+                  overflow: 'hidden'
+                }}
+              >
                 <span style={{
                   color: '#FFFFFF',
-                  fontSize: '25px',
+                  fontSize: '24px',
                   fontWeight: '800',
                   letterSpacing: '0.3px',
-                  backgroundImage: 'linear-gradient(90deg, #FFFFFF 60%, #B6F2FF 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
                 }}>
                   Patil Brothers
                 </span>
                 <span style={{
                   color: '#00D4FF',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontWeight: '600',
-                  letterSpacing: '0.5px'
+                  letterSpacing: '0.4px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
                 }}>
                   Borewell Camera & Borewell Lock
                 </span>
@@ -232,7 +239,8 @@ export default function Header() {
               backgroundColor: 'rgba(255, 255, 255, 0.03)',
               border: '1px solid rgba(255, 255, 255, 0.06)',
               padding: '6px',
-              borderRadius: '16px'
+              borderRadius: '16px',
+              flexShrink: 0
             }} className="desktop-nav">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path && !item.scrollTo;
@@ -262,7 +270,7 @@ export default function Header() {
               })}
             </nav>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Toggle — always visible, never squeezed */}
             <button
               className="mobile-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -272,13 +280,14 @@ export default function Header() {
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
                 color: '#FFFFFF',
-                padding: '12px 16px',
+                padding: '10px 14px',
                 borderRadius: '12px',
                 cursor: 'pointer',
                 fontSize: '22px',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.25s ease'
+                transition: 'all 0.25s ease',
+                flexShrink: 0
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = 'rgba(0, 212, 255, 0.15)';
@@ -335,7 +344,7 @@ export default function Header() {
         </header>
       </div>
 
-      {/* ===== Ad Banner (outside sticky wrapper — scrolls away) ===== */}
+      {/* Ad Banner */}
       {isFetchingAds && (
         <div style={{
           backgroundColor: '#0F1E33',
@@ -399,23 +408,22 @@ export default function Header() {
             </div>
           ))}
 
-          {/* Previous button */}
           {ads.length > 1 && (
             <button
               onClick={goToPrevAd}
               aria-label="Previous ad"
               style={{
                 position: 'absolute',
-                left: '20px',
+                left: '14px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: '48px',
-                height: '48px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
                 backgroundColor: 'rgba(10, 22, 40, 0.7)',
                 border: '1.5px solid rgba(255, 255, 255, 0.3)',
                 color: '#FFFFFF',
-                fontSize: '17px',
+                fontSize: '14px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -423,44 +431,30 @@ export default function Header() {
                 backdropFilter: 'blur(6px)',
                 zIndex: 5,
                 opacity: showAdControls ? 1 : 0,
-                transform: showAdControls ? 'translateY(-50%) scale(1)' : 'translateY(-50%) scale(0.85)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.3s ease',
                 pointerEvents: showAdControls ? 'auto' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#00D4FF';
-                e.currentTarget.style.color = '#0A1628';
-                e.currentTarget.style.borderColor = '#00D4FF';
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.12)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(10, 22, 40, 0.7)';
-                e.currentTarget.style.color = '#FFFFFF';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
               }}
             >
               <FaChevronLeft />
             </button>
           )}
 
-          {/* Next button */}
           {ads.length > 1 && (
             <button
               onClick={goToNextAd}
               aria-label="Next ad"
               style={{
                 position: 'absolute',
-                right: '20px',
+                right: '14px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: '48px',
-                height: '48px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
                 backgroundColor: 'rgba(10, 22, 40, 0.7)',
                 border: '1.5px solid rgba(255, 255, 255, 0.3)',
                 color: '#FFFFFF',
-                fontSize: '17px',
+                fontSize: '14px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -468,28 +462,15 @@ export default function Header() {
                 backdropFilter: 'blur(6px)',
                 zIndex: 5,
                 opacity: showAdControls ? 1 : 0,
-                transform: showAdControls ? 'translateY(-50%) scale(1)' : 'translateY(-50%) scale(0.85)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.3s ease',
                 pointerEvents: showAdControls ? 'auto' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#00D4FF';
-                e.currentTarget.style.color = '#0A1628';
-                e.currentTarget.style.borderColor = '#00D4FF';
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.12)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(10, 22, 40, 0.7)';
-                e.currentTarget.style.color = '#FFFFFF';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
               }}
             >
               <FaChevronRight />
             </button>
           )}
 
-          {/* ===== Bottom-left action buttons (WhatsApp + Call) ===== */}
+          {/* Ad action buttons */}
           <div className="pb-ad-action-btns" style={{
             position: 'absolute',
             bottom: '24px',
@@ -515,19 +496,9 @@ export default function Header() {
                 textDecoration: 'none',
                 fontWeight: '700',
                 fontSize: '14.5px',
-                letterSpacing: '0.3px',
-                boxShadow: '0 6px 20px rgba(37, 211, 102, 0.5), 0 2px 6px rgba(0, 0, 0, 0.2)',
+                boxShadow: '0 6px 20px rgba(37, 211, 102, 0.5)',
                 border: '1.5px solid rgba(255, 255, 255, 0.25)',
-                transition: 'all 0.3s ease',
                 whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(37, 211, 102, 0.65), 0 3px 8px rgba(0, 0, 0, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.5), 0 2px 6px rgba(0, 0, 0, 0.2)';
               }}
             >
               <FaWhatsapp style={{ fontSize: '18px' }} />
@@ -548,19 +519,9 @@ export default function Header() {
                 textDecoration: 'none',
                 fontWeight: '800',
                 fontSize: '14.5px',
-                letterSpacing: '0.3px',
-                boxShadow: '0 6px 20px rgba(0, 212, 255, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2)',
+                boxShadow: '0 6px 20px rgba(0, 212, 255, 0.55)',
                 border: '1.5px solid rgba(255, 255, 255, 0.4)',
-                transition: 'all 0.3s ease',
                 whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 212, 255, 0.7), 0 3px 8px rgba(0, 0, 0, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 212, 255, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2)';
               }}
             >
               <FaPhoneAlt style={{ fontSize: '15px' }} />
@@ -568,7 +529,7 @@ export default function Header() {
             </a>
           </div>
 
-          {/* Dots indicator */}
+          {/* Dots */}
           {ads.length > 1 && (
             <div
               className="pb-ad-dots"
@@ -614,12 +575,11 @@ export default function Header() {
             </div>
           )}
 
-          {/* Counter badge */}
           {ads.length > 1 && (
             <div style={{
               position: 'absolute',
-              top: '18px',
-              right: '18px',
+              top: '14px',
+              right: '14px',
               padding: '6px 14px',
               backgroundColor: 'rgba(10, 22, 40, 0.7)',
               color: '#FFFFFF',
@@ -628,8 +588,7 @@ export default function Header() {
               fontWeight: '700',
               backdropFilter: 'blur(6px)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
-              zIndex: 5,
-              letterSpacing: '0.5px'
+              zIndex: 5
             }}>
               {currentAdIndex + 1} / {ads.length}
             </div>
@@ -637,7 +596,6 @@ export default function Header() {
         </div>
       )}
 
-      {/* Responsive Styles */}
       <style>{`
         .pb-logo-wrap {
           transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
@@ -646,7 +604,6 @@ export default function Header() {
           transform: rotate(-3deg) scale(1.04);
           box-shadow: 0 6px 18px rgba(0, 212, 255, 0.45);
         }
-
         .pb-nav-btn {
           position: relative;
         }
@@ -670,7 +627,6 @@ export default function Header() {
         .pb-nav-btn:hover::after {
           transform: scaleX(1);
         }
-
         .pb-pulse-btn {
           position: relative;
         }
@@ -684,42 +640,44 @@ export default function Header() {
           pointer-events: none;
         }
 
+        /* ===== TABLET / MOBILE ===== */
         @media (max-width: 1050px) {
-          .desktop-nav {
-            display: none !important;
-          }
-          .mobile-toggle {
-            display: flex !important;
-          }
+          .desktop-nav { display: none !important; }
+          .mobile-toggle { display: flex !important; }
         }
         @media (min-width: 1051px) {
-          .mobile-menu {
-            display: none !important;
-          }
+          .mobile-menu { display: none !important; }
         }
 
-        /* ===== Mobile-only tweaks ===== */
+        /* ===== MOBILE TWEAKS ===== */
         @media (max-width: 600px) {
-          header > div:first-child {
-            padding: 16px 20px !important;
+          .pb-header-inner {
+            padding: 12px 14px !important;
+            gap: 10px !important;
           }
-          header img {
-            height: 100% !important;
+          .pb-logo-wrap {
+            width: 52px !important;
+            height: 52px !important;
           }
-          header span:first-child {
+          .pb-logo-group {
+            gap: 10px !important;
+          }
+          .pb-brand-text span:first-child {
+            font-size: 17px !important;
+          }
+          .pb-brand-text span:last-child {
+            font-size: 10.5px !important;
+          }
+          .mobile-toggle {
+            padding: 9px 12px !important;
             font-size: 20px !important;
-          }
-          header span:last-child {
-            font-size: 12px !important;
           }
           .pb-ad-dots {
             display: none !important;
           }
-
-          /* Smaller ad action pill buttons on mobile — keep text but reduce size */
           .pb-ad-action-btns {
-            bottom: 16px !important;
-            left: 16px !important;
+            bottom: 14px !important;
+            left: 14px !important;
             gap: 8px !important;
           }
           .pb-ad-btn {
@@ -732,25 +690,30 @@ export default function Header() {
             font-size: 13px !important;
           }
         }
+
         @media (max-width: 420px) {
+          .pb-header-inner {
+            padding: 10px 10px !important;
+          }
+          .pb-logo-wrap {
+            width: 46px !important;
+            height: 46px !important;
+          }
+          .pb-brand-text span:first-child {
+            font-size: 15px !important;
+          }
+          .pb-brand-text span:last-child {
+            font-size: 9.5px !important;
+          }
           .pb-ad-btn {
             padding: 7px 12px !important;
             font-size: 11px !important;
           }
-          .pb-ad-btn svg {
-            font-size: 12px !important;
-          }
         }
 
         @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
         @keyframes spin {
           from { transform: rotate(0deg); }
