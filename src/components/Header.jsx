@@ -156,7 +156,7 @@ export default function Header() {
             }}
           >
 
-            {/* Logo & Brand — allow shrinking, prevent overflow */}
+            {/* Logo & Brand */}
             <div
               onClick={() => handleNavClick({ label: 'Home', path: '/' })}
               className="pb-logo-group"
@@ -270,7 +270,7 @@ export default function Header() {
               })}
             </nav>
 
-            {/* Mobile Menu Toggle — always visible, never squeezed */}
+            {/* Mobile Menu Toggle */}
             <button
               className="mobile-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -480,6 +480,28 @@ export default function Header() {
             zIndex: 5,
             flexWrap: 'wrap'
           }}>
+             <a
+              href="tel:919353368514"
+              className="pb-pulse-btn pb-ad-btn"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '9px',
+                padding: '13px 24px',
+                background: 'linear-gradient(135deg, #FF9F43 0%, #E8590C 100%)',
+                color: '#FFFFFF',
+                borderRadius: '32px',
+                textDecoration: 'none',
+                fontWeight: '800',
+                fontSize: '14.5px',
+                boxShadow: '0 6px 20px rgba(0, 102, 204, 0.55)',
+                border: '1.5px solid rgba(255, 255, 255, 0.4)',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <FaPhoneAlt style={{ fontSize: '15px' }} />
+              Call Now
+            </a>
             <a
               href="https://wa.me/919353368514"
               target="_blank"
@@ -505,31 +527,9 @@ export default function Header() {
               WhatsApp
             </a>
 
-            <a
-              href="tel:919353368514"
-              className="pb-pulse-btn pb-ad-btn"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '9px',
-                padding: '13px 24px',
-                background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
-                color: '#0A1628',
-                borderRadius: '32px',
-                textDecoration: 'none',
-                fontWeight: '800',
-                fontSize: '14.5px',
-                boxShadow: '0 6px 20px rgba(0, 212, 255, 0.55)',
-                border: '1.5px solid rgba(255, 255, 255, 0.4)',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              <FaPhoneAlt style={{ fontSize: '15px' }} />
-              Call Now
-            </a>
+           
           </div>
 
-          {/* Dots */}
           {ads.length > 1 && (
             <div
               className="pb-ad-dots"
@@ -649,28 +649,28 @@ export default function Header() {
           .mobile-menu { display: none !important; }
         }
 
-        /* ===== MOBILE TWEAKS ===== */
+        /* ===== MOBILE TWEAKS (bigger navbar height) ===== */
         @media (max-width: 600px) {
           .pb-header-inner {
-            padding: 12px 14px !important;
+            padding: 18px 16px !important;
             gap: 10px !important;
           }
           .pb-logo-wrap {
-            width: 52px !important;
-            height: 52px !important;
+            width: 60px !important;
+            height: 60px !important;
           }
           .pb-logo-group {
-            gap: 10px !important;
+            gap: 12px !important;
           }
           .pb-brand-text span:first-child {
-            font-size: 17px !important;
+            font-size: 19px !important;
           }
           .pb-brand-text span:last-child {
-            font-size: 10.5px !important;
+            font-size: 11.5px !important;
           }
           .mobile-toggle {
-            padding: 9px 12px !important;
-            font-size: 20px !important;
+            padding: 11px 14px !important;
+            font-size: 22px !important;
           }
           .pb-ad-dots {
             display: none !important;
@@ -693,17 +693,17 @@ export default function Header() {
 
         @media (max-width: 420px) {
           .pb-header-inner {
-            padding: 10px 10px !important;
+            padding: 16px 14px !important;
           }
           .pb-logo-wrap {
-            width: 46px !important;
-            height: 46px !important;
+            width: 54px !important;
+            height: 54px !important;
           }
           .pb-brand-text span:first-child {
-            font-size: 15px !important;
+            font-size: 17px !important;
           }
           .pb-brand-text span:last-child {
-            font-size: 9.5px !important;
+            font-size: 10.5px !important;
           }
           .pb-ad-btn {
             padding: 7px 12px !important;

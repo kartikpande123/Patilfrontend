@@ -912,6 +912,42 @@ export default function UserDashboard() {
         gap: '16px',
         zIndex: 1500
       }}>
+          {/* Call button */}
+        <a
+          href="tel:919353368514"
+          aria-label="Call us"
+          title="Call 919353368514"
+          className="float-call-btn"
+          style={{
+            position: 'relative',
+            width: '58px',
+            height: '58px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #FF9F43 0%, #E8590C 100%)',
+            color: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '24px',
+            textDecoration: 'none',
+            boxShadow: '0 6px 20px rgba(232, 89, 12, 0.45)',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+            animation: 'floatPulseOrange 2.4s ease-in-out infinite 0.4s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(232, 89, 12, 0.7)';
+            e.currentTarget.style.animation = 'none';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(232, 89, 12, 0.45)';
+            e.currentTarget.style.animation = 'floatPulseOrange 2.4s ease-in-out infinite 0.4s';
+          }}
+        >
+          <FaPhoneAlt />
+          <span className="float-ring call-ring" aria-hidden="true" />
+        </a>
         {/* WhatsApp button */}
         <a
           href="https://wa.me/919353368514"
@@ -951,42 +987,7 @@ export default function UserDashboard() {
           <span className="float-ring whatsapp-ring" aria-hidden="true" />
         </a>
 
-        {/* Call button */}
-        <a
-          href="tel:919353368514"
-          aria-label="Call us"
-          title="Call 919353368514"
-          className="float-call-btn"
-          style={{
-            position: 'relative',
-            width: '58px',
-            height: '58px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #FF9F43 0%, #E8590C 100%)',
-            color: '#FFFFFF',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '24px',
-            textDecoration: 'none',
-            boxShadow: '0 6px 20px rgba(232, 89, 12, 0.45)',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-            animation: 'floatPulseOrange 2.4s ease-in-out infinite 0.4s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
-            e.currentTarget.style.boxShadow = '0 12px 32px rgba(232, 89, 12, 0.7)';
-            e.currentTarget.style.animation = 'none';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(232, 89, 12, 0.45)';
-            e.currentTarget.style.animation = 'floatPulseOrange 2.4s ease-in-out infinite 0.4s';
-          }}
-        >
-          <FaPhoneAlt />
-          <span className="float-ring call-ring" aria-hidden="true" />
-        </a>
+      
       </div>
 
       {/* Buy Now Popup */}
