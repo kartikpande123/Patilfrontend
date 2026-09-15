@@ -9,7 +9,7 @@ import {
   FaPhoneAlt,
   FaSpinner
 } from 'react-icons/fa';
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logo-main.png";
 import API_BASE_URL from './ApiConfig';
 
 export default function Header() {
@@ -62,7 +62,6 @@ export default function Header() {
       return;
     }
 
-    // Auto-advance every 5 seconds
     autoScrollTimerRef.current = setInterval(() => {
       setCurrentAdIndex(prev => (prev + 1) % ads.length);
     }, 5000);
@@ -98,7 +97,6 @@ export default function Header() {
   const goToPrevAd = (e) => {
     if (e) e.stopPropagation();
     setCurrentAdIndex(prev => (prev - 1 + ads.length) % ads.length);
-    // Reset auto-scroll timer so manual click gives full 5 seconds before auto-advance
     if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current);
     autoScrollTimerRef.current = setInterval(() => {
       setCurrentAdIndex(p => (p + 1) % ads.length);
@@ -114,225 +112,230 @@ export default function Header() {
     }, 5000);
   };
 
-  // ===== UPDATED: handles both normal nav and scroll-to-section nav items =====
-const handleNavClick = (item) => {
-  if (item.scrollTo) {
-    if (location.pathname === item.path) {
-      // Already on the right page — just scroll
-      const el = document.getElementById(item.scrollTo);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // Navigate first, then scroll once the page has rendered
-      navigate(item.path);
-      setTimeout(() => {
+  const handleNavClick = (item) => {
+    if (item.scrollTo) {
+      if (location.pathname === item.path) {
         const el = document.getElementById(item.scrollTo);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
+      } else {
+        navigate(item.path);
+        setTimeout(() => {
+          const el = document.getElementById(item.scrollTo);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+    } else {
+      navigate(item.path);
     }
-  } else {
-    navigate(item.path);
-  }
-  setIsMobileMenuOpen(false);
-};
+    setIsMobileMenuOpen(false);
+  };
 
   return (
-    <div style={{
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-    }}>
-      {/* ===== Navbar (sticky) ===== */}
-      <header style={{
+    <>
+      {/* ===== Sticky Navbar Wrapper (only nav + mobile menu stick) ===== */}
+      <div style={{
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         position: 'sticky',
         top: 0,
-        zIndex: 1000,
-        background: scrolled
-          ? 'linear-gradient(180deg, #0A1628 0%, #0C1B30 100%)'
-          : 'linear-gradient(180deg, #0A1628 0%, #101F38 100%)',
-        boxShadow: scrolled
-          ? '0 4px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 212, 255, 0.06)'
-          : '0 2px 10px rgba(0, 0, 0, 0.15)',
-        borderBottom: '1px solid rgba(0, 212, 255, 0.12)',
-        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+        zIndex: 1000
       }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: scrolled ? '14px 40px' : '20px 40px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '30px',
-          transition: 'padding 0.3s ease'
+        <header style={{
+          background: scrolled
+            ? 'linear-gradient(180deg, #0A1628 0%, #0C1B30 100%)'
+            : 'linear-gradient(180deg, #0A1628 0%, #101F38 100%)',
+          boxShadow: scrolled
+            ? '0 4px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 212, 255, 0.06)'
+            : '0 2px 10px rgba(0, 0, 0, 0.15)',
+          borderBottom: '1px solid rgba(0, 212, 255, 0.12)',
+          transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
         }}>
-
-          {/* Logo & Brand */}
-          <div
-            onClick={() => handleNavClick({ label: 'Home', path: '/' })}
-            className="pb-logo-group"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '18px',
-              cursor: 'pointer',
-              flexShrink: 0
-            }}
-          >
-            <div className="pb-logo-wrap" style={{
-              position: 'relative',
-              borderRadius: '14px',
-              padding: '3px',
-              background: 'linear-gradient(135deg, #00D4FF, #0099CC, transparent)',
-            }}>
-              <img
-                src={logo}
-                alt="Patil Brothers Logo"
-                style={{
-                  height: '68px',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  borderRadius: '11px',
-                  display: 'block'
-                }}
-              />
-            </div>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              lineHeight: '1.25'
-            }}>
-              <span style={{
-                color: '#FFFFFF',
-                fontSize: '25px',
-                fontWeight: '800',
-                letterSpacing: '0.3px',
-                backgroundImage: 'linear-gradient(90deg, #FFFFFF 60%, #B6F2FF 100%)',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-              }}>
-                Patil Brothers
-              </span>
-              <span style={{
-                color: '#00D4FF',
-                fontSize: '15px',
-                fontWeight: '600',
-                letterSpacing: '0.5px'
-              }}>
-                Borewell Camera & Borewell Lock
-              </span>
-            </div>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav style={{
+          <div style={{
+            maxWidth: '1400px',
+            margin: '0 auto',
+            padding: scrolled ? '14px 40px' : '20px 40px',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            padding: '6px',
-            borderRadius: '16px'
-          }} className="desktop-nav">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path && !item.scrollTo;
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => handleNavClick(item)}
-                  className="pb-nav-btn"
+            justifyContent: 'space-between',
+            gap: '30px',
+            transition: 'padding 0.3s ease'
+          }}>
+
+            {/* Logo & Brand */}
+            <div
+              onClick={() => handleNavClick({ label: 'Home', path: '/' })}
+              className="pb-logo-group"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '18px',
+                cursor: 'pointer',
+                flexShrink: 0
+              }}
+            >
+              <div className="pb-logo-wrap" style={{
+                position: 'relative',
+                width: scrolled ? '60px' : '72px',
+                height: scrolled ? '60px' : '72px',
+                borderRadius: '50%',
+                padding: '3px',
+                background: 'linear-gradient(135deg, #00D4FF, #0099CC, #00D4FF)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s ease',
+                overflow: 'hidden'
+              }}>
+                <img
+                  src={logo}
+                  alt="Patil Brothers Logo"
                   style={{
-                    backgroundColor: isActive ? 'rgba(0, 212, 255, 0.14)' : 'transparent',
-                    color: isActive ? '#00D4FF' : '#FFFFFF',
-                    border: 'none',
-                    padding: '11px 22px',
-                    borderRadius: '11px',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.25s ease',
-                    letterSpacing: '0.2px',
-                    whiteSpace: 'nowrap',
-                    boxShadow: isActive ? '0 0 0 1px rgba(0, 212, 255, 0.35), 0 4px 14px rgba(0, 212, 255, 0.15)' : 'none'
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: '50%',
+                    display: 'block'
                   }}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
+                />
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                lineHeight: '1.25'
+              }}>
+                <span style={{
+                  color: '#FFFFFF',
+                  fontSize: '25px',
+                  fontWeight: '800',
+                  letterSpacing: '0.3px',
+                  backgroundImage: 'linear-gradient(90deg, #FFFFFF 60%, #B6F2FF 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                }}>
+                  Patil Brothers
+                </span>
+                <span style={{
+                  color: '#00D4FF',
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  letterSpacing: '0.5px'
+                }}>
+                  Borewell Camera & Borewell Lock
+                </span>
+              </div>
+            </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="mobile-toggle"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            style={{
-              display: 'none',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              color: '#FFFFFF',
-              padding: '12px 16px',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              fontSize: '22px',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.25s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(0, 212, 255, 0.15)';
-              e.currentTarget.style.borderColor = '#00D4FF';
-              e.currentTarget.style.transform = 'rotate(90deg)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-              e.currentTarget.style.transform = 'rotate(0deg)';
-            }}
-          >
-            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div
-            className="mobile-menu"
-            style={{
-              backgroundColor: '#0F1E33',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '16px 24px 24px',
+            {/* Desktop Navigation */}
+            <nav style={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              animation: 'slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path && !item.scrollTo;
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => handleNavClick(item)}
-                  style={{
-                    backgroundColor: isActive ? 'rgba(0, 212, 255, 0.12)' : 'transparent',
-                    color: isActive ? '#00D4FF' : '#FFFFFF',
-                    border: 'none',
-                    padding: '14px 18px',
-                    borderRadius: '10px',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              padding: '6px',
+              borderRadius: '16px'
+            }} className="desktop-nav">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path && !item.scrollTo;
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNavClick(item)}
+                    className="pb-nav-btn"
+                    style={{
+                      backgroundColor: isActive ? 'rgba(0, 212, 255, 0.14)' : 'transparent',
+                      color: isActive ? '#00D4FF' : '#FFFFFF',
+                      border: 'none',
+                      padding: '11px 22px',
+                      borderRadius: '11px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease',
+                      letterSpacing: '0.2px',
+                      whiteSpace: 'nowrap',
+                      boxShadow: isActive ? '0 0 0 1px rgba(0, 212, 255, 0.35), 0 4px 14px rgba(0, 212, 255, 0.15)' : 'none'
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </nav>
 
-      {/* ===== Ad Banner (below navbar) ===== */}
+            {/* Mobile Menu Toggle */}
+            <button
+              className="mobile-toggle"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+              style={{
+                display: 'none',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: '#FFFFFF',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                fontSize: '22px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.25s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(0, 212, 255, 0.15)';
+                e.currentTarget.style.borderColor = '#00D4FF';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+              }}
+            >
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {isMobileMenuOpen && (
+            <div
+              className="mobile-menu"
+              style={{
+                backgroundColor: '#0F1E33',
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '16px 24px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                animation: 'slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path && !item.scrollTo;
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNavClick(item)}
+                    style={{
+                      backgroundColor: isActive ? 'rgba(0, 212, 255, 0.12)' : 'transparent',
+                      color: isActive ? '#00D4FF' : '#FFFFFF',
+                      border: 'none',
+                      padding: '14px 18px',
+                      borderRadius: '10px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </header>
+      </div>
+
+      {/* ===== Ad Banner (outside sticky wrapper — scrolls away) ===== */}
       {isFetchingAds && (
         <div style={{
           backgroundColor: '#0F1E33',
@@ -356,7 +359,6 @@ const handleNavClick = (item) => {
           style={{
             position: 'relative',
             width: '100%',
-            /* Doubled banner height so it fills roughly half the first viewport */
             height: 'clamp(210px, 33vw, 480px)',
             overflow: 'hidden',
             backgroundColor: '#0F1E33',
@@ -364,7 +366,6 @@ const handleNavClick = (item) => {
             cursor: 'pointer'
           }}
         >
-          {/* Image layer */}
           {ads.map((ad, idx) => (
             <div
               key={ad.id}
@@ -389,7 +390,6 @@ const handleNavClick = (item) => {
                   display: 'block'
                 }}
               />
-              {/* Dark overlay for better button visibility */}
               <div style={{
                 position: 'absolute',
                 inset: 0,
@@ -399,7 +399,7 @@ const handleNavClick = (item) => {
             </div>
           ))}
 
-          {/* ===== Previous button ===== */}
+          {/* Previous button */}
           {ads.length > 1 && (
             <button
               onClick={goToPrevAd}
@@ -444,7 +444,7 @@ const handleNavClick = (item) => {
             </button>
           )}
 
-          {/* ===== Next button ===== */}
+          {/* Next button */}
           {ads.length > 1 && (
             <button
               onClick={goToNextAd}
@@ -490,7 +490,7 @@ const handleNavClick = (item) => {
           )}
 
           {/* ===== Bottom-left action buttons (WhatsApp + Call) ===== */}
-          <div style={{
+          <div className="pb-ad-action-btns" style={{
             position: 'absolute',
             bottom: '24px',
             left: '24px',
@@ -499,12 +499,11 @@ const handleNavClick = (item) => {
             zIndex: 5,
             flexWrap: 'wrap'
           }}>
-            {/* WhatsApp */}
             <a
               href="https://wa.me/919353368514"
               target="_blank"
               rel="noopener noreferrer"
-              className="pb-pulse-btn"
+              className="pb-pulse-btn pb-ad-btn"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -535,10 +534,9 @@ const handleNavClick = (item) => {
               WhatsApp
             </a>
 
-            {/* Call */}
             <a
               href="tel:919353368514"
-              className="pb-pulse-btn"
+              className="pb-pulse-btn pb-ad-btn"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -570,7 +568,7 @@ const handleNavClick = (item) => {
             </a>
           </div>
 
-          {/* ===== Dots indicator (bottom-center) ===== */}
+          {/* Dots indicator */}
           {ads.length > 1 && (
             <div
               className="pb-ad-dots"
@@ -616,7 +614,7 @@ const handleNavClick = (item) => {
             </div>
           )}
 
-          {/* ===== Counter badge (top-right) ===== */}
+          {/* Counter badge */}
           {ads.length > 1 && (
             <div style={{
               position: 'absolute',
@@ -646,7 +644,7 @@ const handleNavClick = (item) => {
         }
         .pb-logo-group:hover .pb-logo-wrap {
           transform: rotate(-3deg) scale(1.04);
-          box-shadow: 0 6px 18px rgba(0, 212, 255, 0.35);
+          box-shadow: 0 6px 18px rgba(0, 212, 255, 0.45);
         }
 
         .pb-nav-btn {
@@ -699,12 +697,14 @@ const handleNavClick = (item) => {
             display: none !important;
           }
         }
+
+        /* ===== Mobile-only tweaks ===== */
         @media (max-width: 600px) {
           header > div:first-child {
             padding: 16px 20px !important;
           }
           header img {
-            height: 55px !important;
+            height: 100% !important;
           }
           header span:first-child {
             font-size: 20px !important;
@@ -712,11 +712,36 @@ const handleNavClick = (item) => {
           header span:last-child {
             font-size: 12px !important;
           }
-          /* Hide the bottom dots indicator on mobile */
           .pb-ad-dots {
             display: none !important;
           }
+
+          /* Smaller ad action pill buttons on mobile — keep text but reduce size */
+          .pb-ad-action-btns {
+            bottom: 16px !important;
+            left: 16px !important;
+            gap: 8px !important;
+          }
+          .pb-ad-btn {
+            padding: 8px 14px !important;
+            font-size: 12px !important;
+            gap: 6px !important;
+            border-radius: 24px !important;
+          }
+          .pb-ad-btn svg {
+            font-size: 13px !important;
+          }
         }
+        @media (max-width: 420px) {
+          .pb-ad-btn {
+            padding: 7px 12px !important;
+            font-size: 11px !important;
+          }
+          .pb-ad-btn svg {
+            font-size: 12px !important;
+          }
+        }
+
         @keyframes slideDown {
           from {
             opacity: 0;
@@ -744,6 +769,6 @@ const handleNavClick = (item) => {
           to { transform: scale(1); }
         }
       `}</style>
-    </div>
+    </>
   );
 }

@@ -179,7 +179,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Contact Cards + Address Grid */}
+      {/* Contact Cards + Address Grid — 3 columns */}
       <div style={{
         maxWidth: '1200px',
         margin: '-50px auto 0',
@@ -191,12 +191,12 @@ export default function Contact() {
           className="contact-cards-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '20px'
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '22px'
           }}
         >
-          {/* 4 contact cards (Call, WhatsApp, Instagram, Facebook) */}
-          {contactCards.slice(0, 4).map((card, idx) => (
+          {/* Call, WhatsApp, Instagram, Facebook, YouTube cards */}
+          {contactCards.map((card, idx) => (
             <a
               key={idx}
               href={card.link}
@@ -206,7 +206,7 @@ export default function Contact() {
                 textDecoration: 'none',
                 backgroundColor: '#FFFFFF',
                 borderRadius: '16px',
-                padding: '28px 20px',
+                padding: '34px 24px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -267,87 +267,13 @@ export default function Contact() {
             </a>
           ))}
 
-          {/* ===== YouTube Card ===== */}
-          {(() => {
-            const card = contactCards[4];
-            return (
-              <a
-                href={card.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  textDecoration: 'none',
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '16px',
-                  padding: '28px 20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  border: '1px solid #E2E8F0',
-                  boxShadow: '0 8px 25px rgba(15, 23, 42, 0.08)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                  height: '100%',
-                  boxSizing: 'border-box'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-6px)';
-                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(15, 23, 42, 0.12)';
-                  e.currentTarget.style.borderColor = card.color;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(15, 23, 42, 0.08)';
-                  e.currentTarget.style.borderColor = '#E2E8F0';
-                }}
-              >
-                <div style={{
-                  width: '70px',
-                  height: '70px',
-                  borderRadius: '50%',
-                  backgroundColor: card.bg,
-                  color: card.color,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '28px',
-                  marginBottom: '16px'
-                }}>
-                  {card.icon}
-                </div>
-                <p style={{
-                  fontSize: '13px',
-                  color: '#64748B',
-                  fontWeight: '600',
-                  margin: '0 0 6px 0',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
-                }}>
-                  {card.label}
-                </p>
-                <p style={{
-                  fontSize: '16px',
-                  color: '#0A1628',
-                  fontWeight: '700',
-                  margin: 0,
-                  letterSpacing: '0.2px',
-                  wordBreak: 'break-word'
-                }}>
-                  {card.value}
-                </p>
-              </a>
-            );
-          })()}
-
-          {/* ===== Visit Our Store Card ===== */}
+          {/* ===== Visit Our Store Card — 6th slot in the 3×2 grid ===== */}
           <div
             className="visit-store-card"
             style={{
               backgroundColor: '#FFFFFF',
               borderRadius: '16px',
-              padding: '24px 22px',
+              padding: '28px 26px',
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 25px rgba(15, 23, 42, 0.08)',
               display: 'flex',
@@ -361,18 +287,18 @@ export default function Contact() {
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              marginBottom: '14px'
+              marginBottom: '16px'
             }}>
               <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '10px',
+                width: '48px',
+                height: '48px',
+                borderRadius: '12px',
                 background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#FFFFFF',
-                fontSize: '18px',
+                fontSize: '20px',
                 flexShrink: 0
               }}>
                 <FaMapMarkerAlt />
@@ -380,32 +306,32 @@ export default function Contact() {
               <div>
                 <h3 style={{
                   margin: 0,
-                  fontSize: '16px',
+                  fontSize: '17px',
                   fontWeight: '700',
                   color: '#0A1628',
                   lineHeight: '1.2'
                 }}>
                   Visit Our Store
                 </h3>
-                <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#64748B' }}>
+                <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: '#64748B' }}>
                   Come see us in person
                 </p>
               </div>
             </div>
 
             <div style={{
-              padding: '12px 14px',
+              padding: '14px 16px',
               backgroundColor: '#F8FAFC',
               borderRadius: '10px',
               border: '1px solid #E2E8F0',
-              marginBottom: '14px',
+              marginBottom: '16px',
               flex: 1,
               display: 'flex',
               alignItems: 'center'
             }}>
               <p style={{
                 margin: 0,
-                fontSize: '13px',
+                fontSize: '13.5px',
                 color: '#0F172A',
                 fontWeight: '600',
                 lineHeight: '1.5'
@@ -425,13 +351,13 @@ export default function Contact() {
                 justifyContent: 'center',
                 gap: '8px',
                 width: '100%',
-                padding: '11px 16px',
+                padding: '12px 16px',
                 background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
                 color: '#FFFFFF',
                 borderRadius: '10px',
                 textDecoration: 'none',
                 fontWeight: '700',
-                fontSize: '13px',
+                fontSize: '13.5px',
                 boxShadow: '0 4px 15px rgba(0, 212, 255, 0.25)',
                 transition: 'all 0.3s ease',
                 letterSpacing: '0.3px',
@@ -617,11 +543,6 @@ export default function Contact() {
 
       {/* Responsive Styles */}
       <style>{`
-        @media (max-width: 1100px) {
-          .contact-cards-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
-          }
-        }
         @media (max-width: 900px) {
           .contact-cards-grid {
             grid-template-columns: repeat(2, 1fr) !important;

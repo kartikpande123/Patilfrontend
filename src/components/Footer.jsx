@@ -655,7 +655,7 @@ export default function Footer() {
                 onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = '#00D4FF'; }}
               >
-                https://aksoftwareco.in/
+                AK Software Developers — Engineering Tomorrow
               </a>
             </span>
           </p>
