@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FaCheckCircle,
@@ -21,13 +21,10 @@ import add2 from "../assets/add2.jpeg"
 import add3 from "../assets/add3.jpeg"
 import add4 from "../assets/add4.jpeg"
 
-// The secret key sequence — typing this while on the About page
-// navigates to /adminlogin. Case-insensitive.
-const SECRET_CODE = 'admin';
-
 export default function About() {
   const navigate = useNavigate();
-  const keyBufferRef = useRef('');
+  const [aboutClicks, setAboutClicks] = useState(0);
+  const clickResetTimer = useRef(null);
 
   // ===== SCROLL TO TOP ON MOUNT =====
   useEffect(() => {
@@ -35,28 +32,34 @@ export default function About() {
   }, []);
   // ==================================
 
-  // ===== SECRET KEYBOARD SHORTCUT =====
+  // ===== CLEANUP CLICK RESET TIMER =====
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      const tag = (e.target && e.target.tagName) || '';
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) {
-        return;
-      }
-      if (e.key.length !== 1) return;
-
-      keyBufferRef.current = (keyBufferRef.current + e.key.toLowerCase())
-        .slice(-SECRET_CODE.length);
-
-      if (keyBufferRef.current === SECRET_CODE) {
-        keyBufferRef.current = '';
-        navigate('/adminlogin');
-      }
+    return () => {
+      if (clickResetTimer.current) clearTimeout(clickResetTimer.current);
     };
+  }, []);
+  // ====================================
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigate]);
-  // ===================================
+  // ===== SECRET CLICK HANDLER (5 clicks on About Us badge) =====
+  const handleAboutBadgeClick = () => {
+    if (clickResetTimer.current) clearTimeout(clickResetTimer.current);
+
+    const nextCount = aboutClicks + 1;
+
+    if (nextCount >= 5) {
+      setAboutClicks(0);
+      navigate('/adminlogin');
+      return;
+    }
+
+    setAboutClicks(nextCount);
+
+    // Reset the counter if no click happens within 1.5s
+    clickResetTimer.current = setTimeout(() => {
+      setAboutClicks(0);
+    }, 1500);
+  };
+  // ============================================================
 
   const features = [
     {
@@ -199,20 +202,26 @@ export default function About() {
           zIndex: 1,
           textAlign: 'center'
         }}>
-          <span style={{
-            display: 'inline-block',
-            backgroundColor: 'rgba(0, 212, 255, 0.12)',
-            color: '#00D4FF',
-            padding: '6px 18px',
-            borderRadius: '20px',
-            fontSize: '13px',
-            fontWeight: '700',
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-            marginBottom: '20px',
-            border: '1px solid rgba(0, 212, 255, 0.3)',
-            animation: 'pulseGlow 2.5s ease-in-out infinite'
-          }}>
+          {/* About Us badge — click 5 times to open admin login */}
+          <span
+            onClick={handleAboutBadgeClick}
+            style={{
+              display: 'inline-block',
+              backgroundColor: 'rgba(0, 212, 255, 0.12)',
+              color: '#00D4FF',
+              padding: '6px 18px',
+              borderRadius: '20px',
+              fontSize: '13px',
+              fontWeight: '700',
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+              marginBottom: '20px',
+              border: '1px solid rgba(0, 212, 255, 0.3)',
+              animation: 'pulseGlow 2.5s ease-in-out infinite',
+              cursor: 'pointer',
+              userSelect: 'none'
+            }}
+          >
             About Us
           </span>
 

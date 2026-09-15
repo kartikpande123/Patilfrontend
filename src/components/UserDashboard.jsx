@@ -65,9 +65,9 @@ export default function UserDashboard() {
       if (!res.ok) throw new Error('Failed to fetch products');
       const data = await res.json();
       if (data.success) {
+        // Show ALL products (active + inactive). No filtering by status.
         const arr = Object.keys(data.data)
-          .map(key => ({ id: key, ...data.data[key] }))
-          .filter(p => (p.status || 'active') === 'active');
+          .map(key => ({ id: key, ...data.data[key] }));
         setProducts(arr);
         const initial = {};
         arr.forEach(p => { initial[p.id] = 0; });
@@ -109,6 +109,12 @@ export default function UserDashboard() {
     }
     if (product.imageUrl) return [product.imageUrl];
     return [];
+  };
+
+  // Helper: is this product out of stock (deactivated)?
+  const isOutOfStock = (product) => {
+    const status = product.status || 'active';
+    return status !== 'active';
   };
 
   // ===== FILTER + SORT (newest first) =====
@@ -172,6 +178,8 @@ export default function UserDashboard() {
   };
 
   const handleBuyNow = (product) => {
+    // Guard: don't open popup for out-of-stock products
+    if (isOutOfStock(product)) return;
     setSelectedProduct(product);
     setShowPopup(true);
     setPopupImageIndex(0);
@@ -193,7 +201,6 @@ export default function UserDashboard() {
     setIsSubmitting(false);
   };
 
-  // ===== UPDATED handleSubmit — POST API CALL =====
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
@@ -264,52 +271,52 @@ export default function UserDashboard() {
       {/* Main Content */}
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px' }}>
 
-     {/* ===== Section Heading ===== */}
-<div style={{
-  display: 'flex',
-  justifyContent: 'center',
-  marginBottom: '28px'
-}}>
-  <div style={{
-    display: 'inline-flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    background: 'linear-gradient(135deg, #EAF6FB 0%, #DDF1FA 100%)',
-    border: '2px solid #0099CC',
-    borderRadius: '16px',
-    padding: '14px 42px',
-    boxShadow: '0 8px 24px rgba(0, 153, 204, 0.18)',
-    position: 'relative'
-  }}>
-    <span style={{
-      fontSize: '11px',
-      fontWeight: '800',
-      color: '#0099CC',
-      letterSpacing: '2px',
-      textTransform: 'uppercase',
-      marginBottom: '4px'
-    }}>
-      Explore Our Range
-    </span>
-    <h2 style={{
-      fontSize: '28px',
-      fontWeight: '800',
-      color: '#0A1628',
-      margin: 0,
-      letterSpacing: '-0.3px',
-      textAlign: 'center'
-    }} id="our-products">
-      Our Products
-    </h2>
-    <div style={{
-      width: '60px',
-      height: '4px',
-      borderRadius: '4px',
-      background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
-      marginTop: '10px'
-    }} />
-  </div>
-</div>
+        {/* ===== Section Heading ===== */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '28px'
+        }}>
+          <div style={{
+            display: 'inline-flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            background: 'linear-gradient(135deg, #EAF6FB 0%, #DDF1FA 100%)',
+            border: '2px solid #0099CC',
+            borderRadius: '16px',
+            padding: '14px 42px',
+            boxShadow: '0 8px 24px rgba(0, 153, 204, 0.18)',
+            position: 'relative'
+          }}>
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '800',
+              color: '#0099CC',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              marginBottom: '4px'
+            }}>
+              Explore Our Range
+            </span>
+            <h2 style={{
+              fontSize: '28px',
+              fontWeight: '800',
+              color: '#0A1628',
+              margin: 0,
+              letterSpacing: '-0.3px',
+              textAlign: 'center'
+            }} id="our-products">
+              Our Products
+            </h2>
+            <div style={{
+              width: '60px',
+              height: '4px',
+              borderRadius: '4px',
+              background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
+              marginTop: '10px'
+            }} />
+          </div>
+        </div>
 
         {/* ===== Search + Filter Bar ===== */}
         <div style={{
@@ -524,6 +531,7 @@ export default function UserDashboard() {
               const currentImg = images[currentIdx];
               const hasDiscount = product.discount > 0;
               const hasMultipleImages = images.length > 1;
+              const outOfStock = isOutOfStock(product);
 
               return (
                 <div
@@ -532,21 +540,22 @@ export default function UserDashboard() {
                     backgroundColor: '#FFFFFF',
                     borderRadius: '14px',
                     overflow: 'hidden',
-                    border: '2px solid #D6E4F0',
+                    border: `2px solid ${outOfStock ? '#FCA5A5' : '#D6E4F0'}`,
                     boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)',
                     transition: 'all 0.3s ease',
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    opacity: outOfStock ? 0.9 : 1
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-6px)';
                     e.currentTarget.style.boxShadow = '0 15px 35px rgba(15, 23, 42, 0.14)';
-                    e.currentTarget.style.borderColor = '#0099CC';
+                    e.currentTarget.style.borderColor = outOfStock ? '#EF4444' : '#0099CC';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = '0 6px 18px rgba(15, 23, 42, 0.08)';
-                    e.currentTarget.style.borderColor = '#D6E4F0';
+                    e.currentTarget.style.borderColor = outOfStock ? '#FCA5A5' : '#D6E4F0';
                   }}
                 >
                   {/* Image Carousel */}
@@ -568,7 +577,8 @@ export default function UserDashboard() {
                           height: '100%',
                           objectFit: 'contain',
                           backgroundColor: '#F1F5F9',
-                          transition: 'transform 0.5s ease'
+                          transition: 'transform 0.5s ease',
+                          filter: outOfStock ? 'grayscale(0.6) brightness(0.95)' : 'none'
                         }}
                       />
                     ) : (
@@ -696,7 +706,8 @@ export default function UserDashboard() {
                       </div>
                     )}
 
-                    {hasDiscount && (
+                    {/* Discount badge (only if in stock and has discount) */}
+                    {hasDiscount && !outOfStock && (
                       <div style={{
                         position: 'absolute',
                         top: '10px',
@@ -714,6 +725,27 @@ export default function UserDashboard() {
                         zIndex: 2
                       }}>
                       {product.discount} % OFF
+                      </div>
+                    )}
+
+                    {/* OUT OF STOCK badge (replaces discount badge position) */}
+                    {outOfStock && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)',
+                        color: '#FFFFFF',
+                        padding: '5px 12px',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        letterSpacing: '0.5px',
+                        textTransform: 'uppercase',
+                        boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)',
+                        zIndex: 3
+                      }}>
+                        Out of Stock
                       </div>
                     )}
 
@@ -802,7 +834,7 @@ export default function UserDashboard() {
                       <span style={{
                         fontSize: '20px',
                         fontWeight: '800',
-                        color: '#0A1628',
+                        color: outOfStock ? '#94A3B8' : '#0A1628',
                         display: 'flex',
                         alignItems: 'center'
                       }}>
@@ -821,36 +853,46 @@ export default function UserDashboard() {
                       )}
                     </div>
 
+                    {/* Buy Now button — disabled when out of stock */}
                     <button
                       onClick={() => handleBuyNow(product)}
+                      disabled={outOfStock}
+                      aria-disabled={outOfStock}
                       style={{
                         width: '100%',
-                        background: 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
+                        background: outOfStock
+                          ? 'linear-gradient(135deg, #CBD5E1 0%, #94A3B8 100%)'
+                          : 'linear-gradient(135deg, #00D4FF 0%, #0099CC 100%)',
                         color: '#FFFFFF',
                         padding: '11px',
                         borderRadius: '10px',
                         border: 'none',
                         fontWeight: '700',
                         fontSize: '13px',
-                        cursor: 'pointer',
+                        cursor: outOfStock ? 'not-allowed' : 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '7px',
-                        boxShadow: '0 4px 15px rgba(0, 212, 255, 0.3)',
+                        boxShadow: outOfStock ? 'none' : '0 4px 15px rgba(0, 212, 255, 0.3)',
                         transition: 'all 0.3s ease',
-                        letterSpacing: '0.3px'
+                        letterSpacing: '0.3px',
+                        opacity: outOfStock ? 0.85 : 1
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 212, 255, 0.4)';
+                        if (!outOfStock) {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 212, 255, 0.4)';
+                        }
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 212, 255, 0.3)';
+                        if (!outOfStock) {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 212, 255, 0.3)';
+                        }
                       }}
                     >
-                      <FaShoppingCart /> Buy Now
+                      <FaShoppingCart /> {outOfStock ? 'Out of Stock' : 'Buy Now'}
                     </button>
                   </div>
                 </div>
@@ -861,7 +903,6 @@ export default function UserDashboard() {
       </div>
 
       {/* ===== Floating WhatsApp + Call Buttons (bottom-right) ===== */}
-            {/* ===== Floating WhatsApp + Call Buttons (bottom-right) ===== */}
       <div style={{
         position: 'fixed',
         right: '20px',
@@ -907,13 +948,12 @@ export default function UserDashboard() {
           }}
         >
           <FaWhatsapp />
-          {/* ping ring */}
           <span className="float-ring whatsapp-ring" aria-hidden="true" />
         </a>
 
         {/* Call button */}
         <a
-          href="tel:08310205800"
+          href="tel:919353368514"
           aria-label="Call us"
           title="Call 919353368514"
           className="float-call-btn"
@@ -945,7 +985,6 @@ export default function UserDashboard() {
           }}
         >
           <FaPhoneAlt />
-          {/* ping ring */}
           <span className="float-ring call-ring" aria-hidden="true" />
         </a>
       </div>
@@ -1643,7 +1682,7 @@ export default function UserDashboard() {
 
       <Footer />
 
-           <style>{`
+      <style>{`
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
@@ -1663,7 +1702,6 @@ export default function UserDashboard() {
           }
         }
 
-        /* ===== Floating button pulses ===== */
         @keyframes floatPulseGreen {
           0%, 100% {
             box-shadow:
@@ -1690,7 +1728,6 @@ export default function UserDashboard() {
           }
         }
 
-        /* ===== Expanding ring behind each button ===== */
         @keyframes ringPing {
           0% {
             transform: scale(1);
@@ -1719,13 +1756,11 @@ export default function UserDashboard() {
           animation-delay: 0.4s;
         }
 
-        /* Stop pulses on hover (from JS we also clear .style.animation) */
         .float-whatsapp-btn:hover .float-ring,
         .float-call-btn:hover .float-ring {
           animation-play-state: paused;
         }
 
-        /* Respect users who prefer reduced motion */
         @media (prefers-reduced-motion: reduce) {
           .float-whatsapp-btn,
           .float-call-btn {
